@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["btnLogin"])) {
         } elseif ($info['userGroupId'] == "UG003") {
             header('Location: http://localhost/hms/edashboard.php');
             exit;
-        } else {
+        } elseif ($info['userGroupId'] == "UG001"){
             header('Location: http://localhost/hms/dashboard.php');
             exit;
         }
