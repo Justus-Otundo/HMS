@@ -1,60 +1,49 @@
 <?php
-$GLOBALS['title']="Dashboard-HMS";
-$page_name="DashBoard";
+$GLOBALS['title'] = "Dashboard-HMS";
+$page_name = "DashBoard";
 require('inc/sessionManager.php');
 require('inc/dbPlayer.php');
-$ses = new \sessionManager\sessionManager();
+use sessionManager\sessionManager;
+use dbPlayer\dbPlayer;
+
+$ses = new sessionManager();
 $ses->start();
-if($ses->isExpired())
-{
-    header( 'Location: login.php');
 
-
-}
-elseif($ses->Get("userGroupId")=="UG004")
-{
-    header( 'Location: sdashboard.php');
-}
-elseif($ses->Get("userGroupId")=="UG003")
-{
-    header( 'Location:edashboard.php');
-}
-else
-{
-    $name=$ses->Get("name");
-    $db = new \dbPlayer\dbPlayer();
+if ($ses->isExpired()) {
+    header('Location: login.php');
+} elseif ($ses->Get("userGroupId") == "UG004") {
+    header('Location: sdashboard.php');
+} elseif ($ses->Get("userGroupId") == "UG003") {
+    header('Location: edashboard.php');
+} else {
+    $name = $ses->Get("name");
+    $db = new dbPlayer();
     $msg = $db->open();
 
-    if ($msg = "true") {
+    if ($msg == "true") {
 
         $data = array();
-        $result = $db->getData("SELECT CASE WHEN COUNT(*)  is NULL THEN 0 ELSE COUNT(*) END as totals from studentinfo WHERE isActive='Y' UNION ALL SELECT CASE WHEN COUNT(*)  is NULL THEN 0 ELSE COUNT(*) END as totalE from employee WHERE isActive='Y' UNION ALL  SELECT CASE WHEN COUNT(*)  is NULL THEN 0 ELSE COUNT(*) END  as totalRoom from rooms where isActive='Y' UNION ALL SELECT CASE WHEN SUM(noOfMeal) IS NULL THEN 0 ELSE SUM(noOfMeal) end from meal WHERE DATE(date)=DATE(NOW())");
-        $GLOBALS['totals']=array();
+        $result = $db->getData("SELECT CASE WHEN COUNT(*) is NULL THEN 0 ELSE COUNT(*) END as totals from studentinfo WHERE isActive='Y' UNION ALL SELECT CASE WHEN COUNT(*) is NULL THEN 0 ELSE COUNT(*) END as totalE from employee WHERE isActive='Y' UNION ALL  SELECT CASE WHEN COUNT(*) is NULL THEN 0 ELSE COUNT(*) END  as totalRoom from rooms where isActive='Y' UNION ALL SELECT CASE WHEN SUM(noOfMeal) IS NULL THEN 0 ELSE SUM(noOfMeal) end from meal WHERE DATE(date)=DATE(NOW())");
+        $GLOBALS['totals'] = array();
 
-        if(false===strpos((string)$result,"Can't"))
-        {
-            while ($row = mysql_fetch_array($result)) {
-
-                array_push($GLOBALS['totals'],$row['totals']);
+        if ($result !== false) {
+            while ($row = $result->fetch_assoc()) {
+                array_push($GLOBALS['totals'], $row['totals']);
             }
         }
 
         $result = $db->getData("SELECT serial,title,description,DATE_FORMAT(createdDate,'%D %M,%Y %h:%i:%s %p') as date FROM notice ORDER BY serial DESC LIMIT 4");
-        if(false===strpos((string)$result,"Can't"))
-        {
+        if ($result !== false) {
+            $GLOBALS['data'] = $result;
+        } else {
+            echo '<script type="text/javascript"> alert("Failed to fetch data from the database.");</script>';
 
-            $GLOBALS['data']=$result;
-        }
-        else
-        {
-            echo '<script type="text/javascript"> alert("' . $result . '");</script>';
         }
     } else {
         echo '<script type="text/javascript"> alert("' . $msg . '");</script>';
     }
-
-
 }
+?>
 ?>
 <?php include('./master.php'); ?>
     <div id="page-wrapper">
@@ -163,23 +152,22 @@ else
                     </div>
                     <div class="panel-body">
                         <div id="accordion" class="panel-group">
-                           <?php while ($row = mysql_fetch_array($GLOBALS['data'])) {
-
-
-                           echo  '<div class="panel panel-success">
+                        <?php
+                        if (isset($GLOBALS['data'] )) {
+                            while ($row = $GLOBALS['data']->fetch_assoc()) {
+                                echo  '<div class="panel panel-success">
                                 <div class="panel-heading">
                                     <h4 class="panel-title">
-                                        <a href="#'.$row['serial'].'" data-parent="#accordion" data-toggle="collapse" aria-expanded="false" class="collapsed">'.$row['title'].'&nbsp;['.$row['date'].']</a>';
-                           echo         '</h4>
+                                        <a href="#' . $row['serial'] . '" data-parent="#accordion" data-toggle="collapse" aria-expanded="false" class="collapsed">' . $row['title'] . '&nbsp;[' . $row['date'] . ']</a>';
+                                echo         '</h4>
                                 </div>
-                                <div class="panel-collapse collapse" id="'.$row['serial'].'" aria-expanded="false" style="height: 0px;">
+                                <div class="panel-collapse collapse" id="' . $row['serial'] . '" aria-expanded="false" style="height: 0px;">
                                     <div class="panel-body">';
-                                    echo $row['description'];
-                                 echo    '</div></div></div>';
-
-
+                                echo $row['description'];
+                                echo    '</div></div></div>';
                             }
-                           ?>
+                        }
+                        ?>
                         </div>
                     </div>
                     <div class="panel-footer">
