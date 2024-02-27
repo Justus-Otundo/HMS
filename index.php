@@ -22,7 +22,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["btnLogin"])) {
         } elseif ($info['userGroupId'] == "UG003") {
             header('Location: http://localhost/hms/edashboard.php');
             exit;
-        } elseif ($info['userGroupId'] == "UG001"){
+        } else {
+            // Default redirection if user's group ID is not UG004 or UG003
             header('Location: http://localhost/hms/dashboard.php');
             exit;
         }
@@ -31,6 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["btnLogin"])) {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

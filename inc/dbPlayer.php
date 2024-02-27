@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: troot
@@ -8,7 +9,8 @@
 
 namespace dbPlayer;
 
-class dbPlayer {
+class dbPlayer
+{
 
     private $db_host = "localhost";
     private $db_name = "hms";
@@ -16,11 +18,13 @@ class dbPlayer {
     private $db_pass = "";
     protected $con;
 
-      public function __construct() {
+    public function __construct()
+    {
         $this->open(); // Call the open method to establish connection
     }
 
-    public function open() {
+    public function open()
+    {
         $this->con = new \mysqli($this->db_host, $this->db_user, $this->db_pass, $this->db_name);
         if ($this->con->connect_errno) {
             return "Connection failed: " . $this->con->connect_error;
@@ -28,29 +32,42 @@ class dbPlayer {
             return true;
         }
     }
-    
 
-    public function close() {
+
+    public function close()
+    {
         $this->con->close();
         return "true";
     }
-     public function login($loginId, $password) {
+    public function login($loginId, $password)
+    {
         $userPass = md5("hms2015" . $password);
         $query = "SELECT loginId, userGroupId, password, name, userId FROM users WHERE loginId = ? AND password = ?";
-        
+
+        // Prepare the query
         $stmt = $this->con->prepare($query);
+
+        // Bind parameters
         $stmt->bind_param("ss", $loginId, $userPass);
+
+        // Execute the query
         $stmt->execute();
+
+        // Get the result set
         $result = $stmt->get_result();
 
+        // Check if there are any rows returned
         if ($result->num_rows > 0) {
+            // Fetch the user information
             $info = $result->fetch_assoc();
-            return $info;
+            return $info; // Return user information
         } else {
-            return false; // Login failed
+            return false; // Return false if login fails
         }
     }
-    public function insertData($table, $data) {
+
+    public function insertData($table, $data)
+    {
         $keys = "`" . implode("`, `", array_keys($data)) . "`";
         $values = "'" . implode("', '", $data) . "'";
         $query = "INSERT INTO `$table` ($keys) VALUES ($values)";
@@ -61,7 +78,8 @@ class dbPlayer {
         }
     }
 
-    public function registration($query, $query2) {
+    public function registration($query, $query2)
+    {
         if ($this->con->query($query)) {
             if ($this->con->query($query2)) {
                 return "true";
@@ -73,7 +91,8 @@ class dbPlayer {
         }
     }
 
-    public function getData($query) {
+    public function getData($query)
+    {
         $result = $this->con->query($query);
         if (!$result) {
             return "Can't get data " . $this->con->error;
@@ -82,7 +101,8 @@ class dbPlayer {
         }
     }
 
-    public function update($query) {
+    public function update($query)
+    {
         if ($this->con->query($query)) {
             return "true";
         } else {
@@ -90,7 +110,8 @@ class dbPlayer {
         }
     }
 
-    public function updateData($table, $conColumn, $conValue, $data) {
+    public function updateData($table, $conColumn, $conValue, $data)
+    {
         $updates = array();
         foreach ($data as $key => $value) {
             $value = $this->con->real_escape_string($value);
@@ -106,7 +127,8 @@ class dbPlayer {
         }
     }
 
-    public function delete($query) {
+    public function delete($query)
+    {
         if ($this->con->query($query)) {
             return "true";
         } else {
@@ -114,7 +136,8 @@ class dbPlayer {
         }
     }
 
-    public function getAutoId($prefix) {
+    public function getAutoId($prefix)
+    {
         $uId = "";
         $q = "SELECT number FROM auto_id WHERE prefix = '$prefix'";
         $result = $this->getData($q);
@@ -134,13 +157,15 @@ class dbPlayer {
         return $userId;
     }
 
-    public function updateAutoId($value, $prefix) {
+    public function updateAutoId($value, $prefix)
+    {
         $id = intval($value) + 1;
         $query = "UPDATE auto_id SET number = $id WHERE prefix = '$prefix'";
         return $this->update($query);
     }
 
-    public function execNonQuery($query) {
+    public function execNonQuery($query)
+    {
         if ($this->con->query($query)) {
             return "true";
         } else {
@@ -148,7 +173,8 @@ class dbPlayer {
         }
     }
 
-    public function execDataTable($query) {
+    public function execDataTable($query)
+    {
         $result = $this->con->query($query);
         if (!$result) {
             return "Can't Execute Query" . $this->con->error;
