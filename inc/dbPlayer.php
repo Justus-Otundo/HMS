@@ -16,20 +16,40 @@ class dbPlayer {
     private $db_pass = "";
     protected $con;
 
+      public function __construct() {
+        $this->open(); // Call the open method to establish connection
+    }
+
     public function open() {
         $this->con = new \mysqli($this->db_host, $this->db_user, $this->db_pass, $this->db_name);
         if ($this->con->connect_errno) {
             return "Connection failed: " . $this->con->connect_error;
         } else {
-            return "true";
+            return true;
         }
     }
+    
 
     public function close() {
         $this->con->close();
         return "true";
     }
+     public function login($loginId, $password) {
+        $userPass = md5("hms2015" . $password);
+        $query = "SELECT loginId, userGroupId, password, name, userId FROM users WHERE loginId = ? AND password = ?";
+        
+        $stmt = $this->con->prepare($query);
+        $stmt->bind_param("ss", $loginId, $userPass);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
+        if ($result->num_rows > 0) {
+            $info = $result->fetch_assoc();
+            return $info;
+        } else {
+            return false; // Login failed
+        }
+    }
     public function insertData($table, $data) {
         $keys = "`" . implode("`, `", array_keys($data)) . "`";
         $values = "'" . implode("', '", $data) . "'";

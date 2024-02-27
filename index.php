@@ -1,73 +1,37 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: troot
- * Date: 1/2/15
- * Time: 10:05 PM
- */
-
 require('inc/dbPlayer.php');
 require('inc/sessionManager.php');
-$msg="";
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    if (isset($_POST["btnLogin"])) {
+$msg = "";
 
-        $db = new \dbPlayer\dbPlayer();
-        $msg = $db->open();
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["btnLogin"])) {
+    $db = new \dbPlayer\dbPlayer();
+    $info = $db->login($_POST["email"], $_POST["password"]);
 
-        if ($msg == "true") {
-            $userPass = md5("hms2015".$_POST['password']);
-            $loginId = $_POST["email"];
-            $query = "select loginId,userGroupId,password,name,userId from users where loginId='" . $loginId . "' and password='" . $userPass . "';";
-            var_dump($query);
-            $result = $db->getData($query);
-            //var_dump($result);
-            $info = array();
-            while ($row = mysql_fetch_assoc($result)) {
+    if ($info !== false) {
+        $ses = new \sessionManager\sessionManager();
+        $ses->start();
+        $ses->Set("loginId", $info['loginId']);
+        $ses->Set("userGroupId", $info['userGroupId']);
+        $ses->Set("name", $info['name']);
+        $ses->Set("userIdLoged", $info['userId']);
 
-                array_push($info, $row['loginId']);
-                array_push($info, $row['userGroupId']);
-                array_push($info, $row['password']);
-                array_push($info, $row['name']);
-                array_push($info, $row['userId']);
-
-            }
-            //$db->close();
-            $ses = new \sessionManager\sessionManager();
-			$ses->start();
-                $ses->Set("loginId", $info[0]);
-                $ses->Set("userGroupId", $info[1]);
-                $ses->Set("name", $info[3]);
-                $ses->Set("userIdLoged", $info[4]);
-            if (is_null($info[0])) {
-                $msg = "Login Id or Password Wrong!";
-
-            }
-            else
-            {
-                
-            }
-            if($info[1]=="UG004")
-            {
-                header('Location: http://localhost/hms/sdashboard.php');
-            }
-            elseif($info[1]=="UG003")
-            {
-
-                header('Location: http://localhost/hms/edashboard.php');
-            }
-            else
-            {
-                header('Location: http://localhost/hms/dashboard.php');
-            }
-
-
+        if ($info['userGroupId'] == "UG004") {
+            header('Location: http://localhost/hms/sdashboard.php');
+            exit;
+        } elseif ($info['userGroupId'] == "UG003") {
+            header('Location: http://localhost/hms/edashboard.php');
+            exit;
+        } else {
+            header('Location: http://localhost/hms/dashboard.php');
+            exit;
         }
-
+    } else {
+        $msg = "Login Id or Password Wrong!";
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
