@@ -108,7 +108,7 @@ function getData()
                                         </tr>
                                     </thead>
                                     <tbody>';
-            while ($row = mysql_fetch_array($result)) {
+            while ($row = mysqli_fetch_array($result)) {
                 $GLOBALS['isData']="1";
                 $GLOBALS['output'] .= "<tr>";
 

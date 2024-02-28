@@ -25,7 +25,7 @@ if (isset($_GET['id']) && $_GET['wtd']) {
             $result = $db->getData("SELECT blockId,blockNo FROM blocks  where isActive='Y'");
             $GLOBALS['output2'] = '';
             if (false === strpos((string)$result, "Can't")) {
-                while ($row = mysql_fetch_array($result)) {
+                while ($row = mysqli_fetch_array($result)) {
                     $GLOBALS['isData2'] = "1";
                     $GLOBALS['output2'] .= '<option value="' . $row['blockNo'] . '">' . $row['blockNo'] . '</option>';
 
@@ -39,7 +39,7 @@ if (isset($_GET['id']) && $_GET['wtd']) {
             $result = $db->getData("SELECT roomId,roomNo FROM rooms  where isActive='Y'");
             $GLOBALS['output3'] = '';
             if (false === strpos((string)$result, "Can't")) {
-                while ($row = mysql_fetch_array($result)) {
+                while ($row = mysqli_fetch_array($result)) {
                     $GLOBALS['isData3'] = "1";
                     $GLOBALS['output3'] .= '<option value="' . $row['roomNo'] . '">' . $row['roomNo'] . '</option>';
 
@@ -56,7 +56,7 @@ if (isset($_GET['id']) && $_GET['wtd']) {
             if(false===strpos((string)$result,"Can't"))
             {
                 $data = array();
-                while ($row = mysql_fetch_array($result)) {
+                while ($row = mysqli_fetch_array($result)) {
                     array_push($data,$row['blockNo']);
                     array_push($data,$row['roomNo']);
                     array_push($data,$row['monthlyRent']);

@@ -5,8 +5,8 @@
  * Date: 2/26/2015
  * Time: 11:53 AM
  */
-$GLOBALS['title']="Attendence-HMS";
-$base_url="http://localhost/hms/";
+$GLOBALS['title'] = "Attendance-HMS";
+$base_url = "http://localhost/hms/";
 
 require('./../../inc/sessionManager.php');
 require('./../../inc/dbPlayer.php');
@@ -14,30 +14,20 @@ require('./../../inc/handyCam.php');
 
 $ses = new \sessionManager\sessionManager();
 $ses->start();
-$name=$ses->Get("name");
+$name = $ses->Get("name");
 
-if($ses->isExpired())
-{
-    header( 'Location:'.$base_url.'login.php');
-
-
-}
-else
-{
-
-
-
+if ($ses->isExpired()) {
+    header('Location:' . $base_url . 'login.php');
+} else {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
         if (isset($_POST["btnSave"])) {
-
             $db = new \dbPlayer\dbPlayer();
             $msg = $db->open();
 
-            if ($msg = "true") {
-                $userIdf =$_POST['person'];
-                $result=$db->getData("SELECT * FROM attendence WHERE userId='".$userIdf."' and date=CURDATE()");
-                if(mysql_num_rows($result)<1) {
+            if ($msg === true) {
+                $userIdf = $_POST['person'];
+                $result = $db->getData("SELECT * FROM attendence WHERE userId='" . $userIdf . "' and date=CURDATE()");
+                if (mysqli_num_rows($result) < 1) {
                     $handyCam = new \handyCam\handyCam();
                     $data = array(
                         'userId' => $_POST['person'],
@@ -45,67 +35,45 @@ else
                         'isAbsence' => $_POST['isabs'],
                         'isLeave' => $_POST['isLeave'],
                         'remark' => $_POST['remark'],
-
-
                     );
                     $result = $db->insertData("attendence", $data);
-                    // var_dump($result);
                     if (is_numeric($result)) {
-
-                        //  $db->close();
-                        echo '<script type="text/javascript"> alert("Attendence Added Successfully.");window.location="add.php";</script>';
+                        echo '<script type="text/javascript"> alert("Attendance Added Successfully.");window.location="add.php";</script>';
                     } elseif (strpos($result, 'Duplicate') !== false) {
-                        echo '<script type="text/javascript"> alert("Attendence Already Exits for today!");window.location="add.php"; </script>';
-                        getData();
+                        echo '<script type="text/javascript"> alert("Attendance Already Exists for today!");window.location="add.php"; </script>';
                     } else {
                         echo '<script type="text/javascript"> alert("' . $result . '");window.location="add.php";</script>';
                     }
+                } else {
+                    echo '<script type="text/javascript"> alert("Attendance Already Exists for today!"); </script>';
                 }
-                else
-                {
-                    echo '<script type="text/javascript"> alert("Attendence Already Exits for today!"); </script>';
-                }
-
-            }
-            else
-            {
+            } else {
                 echo '<script type="text/javascript"> alert("' . $msg . '");window.location="add.php";</script>';
             }
         }
-    }
-    else
-    {
-
+    } else {
         getData();
     }
-
-
 }
+
 function getData()
 {
     $db = new \dbPlayer\dbPlayer();
     $msg = $db->open();
     $data = array();
-    $result = $db->getData("SELECT userId,name FROM studentinfo  where isActive='Y'");
-    $GLOBALS['output']='';
-    if(false===strpos((string)$result,"Can't"))
-    {
-        while ($row = mysql_fetch_array($result)) {
-            $GLOBALS['isData']="1";
-            $GLOBALS['output'] .= '<option value="'.$row['userId'].'">'.$row['name'].'</option>';
-
+    $GLOBALS['output'] = '';
+    $result = $db->getData("SELECT userId, name FROM studentinfo WHERE isActive='Y'");
+    if ($result !== false) {
+        while ($row = mysqli_fetch_array($result)) {
+            $GLOBALS['isData'] = "1";
+            $GLOBALS['output'] .= '<option value="' . $row['userId'] . '">' . $row['name'] . '</option>';
         }
-
-
-
-
-    }
-    else
-    {
-        echo '<script type="text/javascript"> alert("' . $result . '");</script>';
+    } else {
+        echo '<script type="text/javascript"> alert("Error fetching data from the database.");</script>';
     }
 }
 ?>
+
 <?php include('./../../master.php'); ?>
 <div id="page-wrapper">
     <div class="row">

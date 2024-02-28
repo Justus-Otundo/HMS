@@ -39,7 +39,7 @@ else
 
         if(false===strpos((string)$result,"Can't"))
         {
-            while ($row = mysql_fetch_array($result)) {
+            while ($row = mysqli_fetch_array($result)) {
 
                 array_push($data,$row['name']);
                 array_push($data,$row['studentId']);

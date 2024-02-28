@@ -30,7 +30,7 @@ if (isset($_GET['id']) && $_GET['wtd']) {
             if(false===strpos((string)$result,"Can't"))
             {
                 $data = array();
-                while ($row = mysql_fetch_array($result)) {
+                while ($row = mysqli_fetch_array($result)) {
                     array_push($data,$row['name']);
                     array_push($data,$row['studentId']);
                     array_push($data,$row['cellNo']);

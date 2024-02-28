@@ -1,7 +1,7 @@
 <?php
 
-$GLOBALS['title']="Employee-HMS";
-$base_url="http://localhost/hms/";
+$GLOBALS['title'] = "Employee-HMS";
+$base_url = "http://localhost/hms/";
 
 require('./../../inc/sessionManager.php');
 require('./../../inc/dbPlayer.php');
@@ -9,21 +9,18 @@ require('./../../inc/fileUploader.php');
 require('./../../inc/handyCam.php');
 $ses = new \sessionManager\sessionManager();
 $ses->start();
-if($ses->isExpired())
-{
-    header( 'Location:'.$base_url.'login.php');
+if ($ses->isExpired()) {
+    header('Location:' . $base_url . 'login.php');
+
+
+} else {
+    $name = $ses->Get("loginId");
 
 
 }
-else
-{
-    $name=$ses->Get("loginId");
 
 
-}
-
-
-$msg="";
+$msg = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (isset($_POST["btnSave"])) {
@@ -34,11 +31,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($msg = "true") {
             $userIds = $db->getAutoId("EMP");
             $flup = new fileUploader\fileUploader();
-            $perPhoto = $flup->upload("/hms/files/photos/",$_FILES['perPhoto'], $userIds[1]);
+            $perPhoto = $flup->upload("/hms/files/photos/", $_FILES['perPhoto'], $userIds[1]);
             // var_dump($perPhoto);
             if (strpos($perPhoto, 'Error:') == false) {
-               // $dateNow=date("Y-m-d");
-               $sal = (float)$_POST['salary'];
+                // $dateNow=date("Y-m-d");
+                $sal = (float) $_POST['salary'];
                 $handyCam = new \handyCam\handyCam();
                 $data = array(
                     'empId' => $userIds[1],
@@ -48,17 +45,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     'designation' => $_POST['designation'],
                     'cellNo' => $_POST['cellNo'],
                     'gender' => $_POST['gender'],
-                    'dob' =>$handyCam->parseAppDate($_POST['dob']),
-                    'doj' =>$handyCam->parseAppDate($_POST['doj']),
+                    'dob' => $handyCam->parseAppDate($_POST['dob']),
+                    'doj' => $handyCam->parseAppDate($_POST['doj']),
                     'address' => $_POST['presentAddress'],
                     'blockNo' => $_POST['blockNo'],
                     'salary' => $sal,
                     'perPhoto' => $perPhoto,
                     'isActive' => 'Y'
                 );
-                $result = $db->insertData("employee",$data);
-                if($result>0) {
-                    $userPass = md5("hms2015".$_POST['password']);
+                $result = $db->insertData("employee", $data);
+                if ($result > 0) {
+                    $userPass = md5("hms2015" . $_POST['password']);
                     $data = array(
                         'userId' => $userIds[1],
                         'userGroupId' => "UG003",
@@ -69,28 +66,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         'expireDate' => "2115-01-4",
                         'isVerifed' => 'Y'
                     );
-                    $result=$db->insertData("users",$data);
-                    if($result>=0)
-                    {
-                        $id =intval($userIds[0])+1;
+                    $result = $db->insertData("users", $data);
+                    if ($result >= 0) {
+                        $id = intval($userIds[0]) + 1;
 
-                        $query="UPDATE auto_id set number=".$id." where prefix='EMP';";
-                        $result=$db->update($query);
-                       // $db->close();
+                        $query = "UPDATE auto_id set number=" . $id . " where prefix='EMP';";
+                        $result = $db->update($query);
+                        // $db->close();
                         echo '<script type="text/javascript"> alert("Employee Added Successfully.");</script>';
-                    }
-                    else
-                    {
+                    } else {
                         echo '<script type="text/javascript"> alert("' . $result . '");</script>';
                     }
 
-                }
-                elseif(strpos($result,'Duplicate') !== false)
-                {
+                } elseif (strpos($result, 'Duplicate') !== false) {
                     echo '<script type="text/javascript"> alert("Employee Already Exits!");</script>';
-                }
-                else
-                {
+                } else {
                     echo '<script type="text/javascript"> alert("' . $result . '");</script>';
                 }
             } else {
@@ -125,7 +115,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
-                    <form name="admission" action="add.php" onsubmit="return checkForm(this);" accept-charset="utf-8" method="post" enctype="multipart/form-data">
+                    <form name="admission" action="add.php" onsubmit="return checkForm(this);" accept-charset="utf-8"
+                        method="post" enctype="multipart/form-data">
 
 
                         <div class="row">
@@ -136,7 +127,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <div class="input-group">
 
                                             <span class="input-group-addon"><i class="fa fa-leaf"></i> </span>
-                                            <input type="text" placeholder="Full Name" class="form-control" name="name" required>
+                                            <input type="text" placeholder="Full Name" class="form-control" name="name"
+                                                required>
                                         </div>
                                     </div>
                                 </div>
@@ -146,7 +138,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <div class="input-group">
 
                                             <span class="input-group-addon"><i class="fa fa-key"></i> </span>
-                                            <input type="password" id="password" placeholder="" class="form-control" name="password" required>
+                                            <input type="password" id="password" placeholder="" class="form-control"
+                                                name="password" required>
                                         </div>
                                     </div>
 
@@ -157,35 +150,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <div class="input-group">
 
                                             <span class="input-group-addon"><i class="fa fa-key"></i> </span>
-                                            <input type="password" id="rePassword" placeholder="" class="form-control" name="rePassword" required>
+                                            <input type="password" id="rePassword" placeholder="" class="form-control"
+                                                name="rePassword" required>
                                         </div>
                                     </div>
 
                                 </div>
 
-                                </div>
                             </div>
+                        </div>
 
                         <div class="row">
                             <div class="col-lg-12">
 
-                                    <div class="col-lg-4">
-                                        <div class="form-group ">
-                                            <label>Cell No(As Login Id)</label>
-                                            <div class="input-group">
+                                <div class="col-lg-4">
+                                    <div class="form-group ">
+                                        <label>Cell No(As Login Id)</label>
+                                        <div class="input-group">
 
-                                                <span class="input-group-addon"><i class="fa fa-mobile-phone"></i> </span>
-                                                <input type="text" placeholder="Mobile No" class="form-control" name="cellNo" required>
-                                            </div>
+                                            <span class="input-group-addon"><i class="fa fa-mobile-phone"></i> </span>
+                                            <input type="text" placeholder="Mobile No" class="form-control"
+                                                name="cellNo" required>
                                         </div>
                                     </div>
+                                </div>
                                 <div class="col-lg-4">
                                     <div class="form-group ">
                                         <label>Employee Type</label>
                                         <div class="input-group">
 
                                             <span class="input-group-addon"><i class="fa fa-info"></i> </span>
-                                            <input type="text" placeholder="Employee Type" class="form-control" name="empType" required>
+                                            <input type="text" placeholder="Employee Type" class="form-control"
+                                                name="empType" required>
                                         </div>
                                     </div>
                                 </div>
@@ -195,7 +191,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <div class="input-group">
 
                                             <span class="input-group-addon"><i class="fa fa-info"></i> </span>
-                                            <input type="text" placeholder="Designation" class="form-control" name="designation" required>
+                                            <input type="text" placeholder="Designation" class="form-control"
+                                                name="designation" required>
                                         </div>
                                     </div>
                                 </div>
@@ -219,7 +216,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <div class="input-group date" id='dp1'>
 
                                             <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
-                                            <input type="text" placeholder="Date Of Birth" class="form-control datepicker" name="dob" required  data-date-format="dd/mm/yyyy">
+                                            <input type="text" placeholder="Date Of Birth"
+                                                class="form-control datepicker" name="dob" required
+                                                data-date-format="dd/mm/yyyy">
                                         </div>
                                     </div>
                                 </div>
@@ -230,12 +229,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <div class="input-group date" id='dp1'>
 
                                             <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
-                                            <input type="text" placeholder="Join Date" class="form-control datepicker" name="doj" required  data-date-format="dd/mm/yyyy">
+                                            <input type="text" placeholder="Join Date" class="form-control datepicker"
+                                                name="doj" required data-date-format="dd/mm/yyyy">
                                         </div>
                                     </div>
                                 </div>
-                                </div>
                             </div>
+                        </div>
                         <div class="row">
                             <div class="col-lg-12">
 
@@ -245,7 +245,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <div class="input-group">
 
                                             <span class="input-group-addon"><i class="fa fa-building"></i> </span>
-                                            <input type="text" placeholder="Block No" class="form-control" name="blockNo" required>
+                                            <input type="text" placeholder="Block No" class="form-control"
+                                                name="blockNo" required>
                                         </div>
                                     </div>
                                 </div>
@@ -255,7 +256,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <div class="input-group">
 
                                             <span class="input-group-addon"><i class="fa fa-info"></i> </span>
-                                            <input type="text" placeholder="Salary" class="form-control" name="salary" required>
+                                            <input type="text" placeholder="Salary" class="form-control" name="salary"
+                                                required>
                                         </div>
                                     </div>
                                 </div>
@@ -270,8 +272,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                                 </div>
 
-                                </div>
                             </div>
+                        </div>
 
                         <div class="row">
                             <div class="col-lg-12">
@@ -282,7 +284,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <div class="input-group">
 
                                             <span class="input-group-addon"><i class="fa fa-road"></i> </span>
-                                            <textarea rows="3" placeholder="Address" class="form-control" name="presentAddress" required> </textarea>
+                                            <textarea rows="3" placeholder="Address" class="form-control"
+                                                name="presentAddress" required> </textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -290,8 +293,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
 
-                                </div>
                             </div>
+                        </div>
 
 
                         <div class="row">
@@ -304,7 +307,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="col-lg-5"></div>
                                 <div class="col-lg-2">
                                     <div class="form-group ">
-                                        <button type="submit" class="btn btn-success" name="btnSave" ><i class="fa fa-2x fa-check"></i>Save</button>
+                                        <button type="submit" class="btn btn-success" name="btnSave"><i
+                                                class="fa fa-2x fa-check"></i>Save</button>
                                     </div>
 
                                 </div>
@@ -326,7 +330,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <?php include('./../../footer.php'); ?>
 <script type="text/javascript">
-    $( document ).ready(function() {
+    $(document).ready(function () {
         $('.datepicker').datepicker();
 
 
@@ -337,7 +341,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             , confirm_password = document.getElementById("rePassword");
         console.log(password.value);
         console.log(confirm_password.value);
-        if(password.value != confirm_password.value) {
+        if (password.value != confirm_password.value) {
 
             $("#lblmsg").text("**Passwords Don't Match");
 

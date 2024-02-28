@@ -81,7 +81,7 @@ if ($msg = "true") {
     $result = $db->getData("SELECT userId,name FROM studentinfo  where isActive='Y'");
     $GLOBALS['output'] = '';
     if (false === strpos((string)$result, "Can't")) {
-        while ($row = mysql_fetch_array($result)) {
+        while ($row = mysqli_fetch_array($result)) {
             $GLOBALS['isData'] = "1";
             $GLOBALS['output'] .= '<option value="' . $row['userId'] . '">' . $row['name'] . '</option>';
 
@@ -95,7 +95,7 @@ if ($msg = "true") {
     $result = $db->getData("SELECT blockId,blockNo FROM blocks  where isActive='Y'");
     $GLOBALS['output2'] = '';
     if (false === strpos((string)$result, "Can't")) {
-        while ($row = mysql_fetch_array($result)) {
+        while ($row = mysqli_fetch_array($result)) {
             $GLOBALS['isData2'] = "1";
             $GLOBALS['output2'] .= '<option value="' . $row['blockNo'] . '">' . $row['blockNo'] . '</option>';
 
@@ -109,7 +109,7 @@ if ($msg = "true") {
     $result = $db->getData("SELECT roomId,roomNo FROM rooms  where isActive='Y'");
     $GLOBALS['output3'] = '';
     if (false === strpos((string)$result, "Can't")) {
-        while ($row = mysql_fetch_array($result)) {
+        while ($row = mysqli_fetch_array($result)) {
             $GLOBALS['isData3'] = "1";
             $GLOBALS['output3'] .= '<option value="' . $row['roomNo'] . '">' . $row['roomNo'] . '</option>';
 
@@ -142,7 +142,7 @@ if ($msg = "true") {
                                         </tr>
                                     </thead>
                                     <tbody>';
-            while ($row = mysql_fetch_array($result)) {
+            while ($row = mysqli_fetch_array($result)) {
                 $GLOBALS['isData1']="1";
                 $GLOBALS['output1'] .= "<tr>";
                 $GLOBALS['output1'] .= "<td>" . $row['name'] . "</td>";

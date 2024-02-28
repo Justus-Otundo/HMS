@@ -169,7 +169,7 @@ elseif (isset($_GET['billId'])) {
                                         </tr>
                                     </thead>
                                     <tbody>';
-                while ($row = mysql_fetch_array($result)) {
+                while ($row = mysqli_fetch_array($result)) {
                     $billInfo[0]=$row["name"];
                     $billInfo[1]=$row["date"];
                     $billInfo[2]=$billInfo[2]+$row["amount"];
@@ -225,7 +225,7 @@ function billInfo($billId)
     if ($msg = "true") {
     $result = $db->execDataTable("SELECT a.billId,b.name,sum(a.amount) as total,DATE_FORMAT(a.billingDate,'%D %M,%Y') as date from billing as a,studentinfo as b where a.billTo=b.userId and  a.billId='" . $billId . "'");
     $billInfo = array("","",0.00);
-  while ($row = mysql_fetch_array($result)) {
+  while ($row = mysqli_fetch_array($result)) {
     $billInfo[0] = $row["name"];
     $billInfo[1] = $row["date"];
     $billInfo[2] = $row["total"];
@@ -246,7 +246,7 @@ function LoadData($billId)
     if ($msg = "true") {
         $result = $db->execDataTable("SELECT a.type,a.amount from billing as a  where  a.billId='" . $billId . "'");
         $billdata = array();
-        while ($row = mysql_fetch_array($result)) {
+        while ($row = mysqli_fetch_array($result)) {
             $rowd=array();
             array_push($rowd,$row["type"]);
             array_push($rowd,$row["amount"]);

@@ -109,7 +109,7 @@ function getData()
     $GLOBALS['output']='';
     if(false===strpos((string)$result,"Can't"))
     {
-        while ($row = mysql_fetch_array($result)) {
+        while ($row = mysqli_fetch_array($result)) {
             $GLOBALS['isData']="1";
             $GLOBALS['output'] .= '<option value="'.$row['userId'].'">'.$row['name'].'</option>';
 

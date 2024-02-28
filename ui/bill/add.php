@@ -6,8 +6,8 @@
  * Time: 7:15 PM
  */
 
-$GLOBALS['title']="Billing-HMS";
-$base_url="http://localhost/hms/";
+$GLOBALS['title'] = "Billing-HMS";
+$base_url = "http://localhost/hms/";
 
 require('./../../inc/sessionManager.php');
 require('./../../inc/dbPlayer.php');
@@ -15,14 +15,11 @@ require('./../../inc/dbPlayer.php');
 
 $ses = new \sessionManager\sessionManager();
 $ses->start();
-if($ses->isExpired())
-{
-header( 'Location:'.$base_url.'login.php');
+if ($ses->isExpired()) {
+    header('Location:' . $base_url . 'login.php');
 
 
-}
-else
-{
+} else {
     $name = $ses->Get("loginId");
     $msg = "";
     $db = new \dbPlayer\dbPlayer();
@@ -32,8 +29,8 @@ else
     $data = array();
     $result = $db->getData("SELECT userId,name FROM studentinfo  where isActive='Y'");
     $GLOBALS['output'] = '';
-    if (false === strpos((string)$result, "Can't")) {
-        while ($row = mysql_fetch_array($result)) {
+    if (false === strpos((string) $result, "Can't")) {
+        while ($row = mysqli_fetch_array($result)) {
             $GLOBALS['isData'] = "1";
             $GLOBALS['output'] .= '<option value="' . $row['userId'] . '">' . $row['name'] . '</option>';
 
@@ -44,14 +41,14 @@ else
         echo '<script type="text/javascript"> alert("' . $result . '");</script>';
     }
 
-    if(isset($_POST["btnSave"])) {
+    if (isset($_POST["btnSave"])) {
 
         $db = new \dbPlayer\dbPlayer();
         $msg = $db->open();
 
         if ($msg = "true") {
             $billId = $db->getAutoId("BIL");
-         //   $handyCam = new \handyCam\handyCam();
+            //   $handyCam = new \handyCam\handyCam();
             //var_dump($billId);
             $userId = $_POST['person'];
 
@@ -110,11 +107,12 @@ else
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-info-circle fa-fw"></i> Bill  Information
+                    <i class="fa fa-info-circle fa-fw"></i> Bill Information
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
-                    <form name="bill" action="add.php"  accept-charset="utf-8" method="post" enctype="multipart/form-data">
+                    <form name="bill" action="add.php" accept-charset="utf-8" method="post"
+                        enctype="multipart/form-data">
 
 
                         <div class="row">
@@ -123,7 +121,7 @@ else
                                     <div class="form-group">
                                         <label>Student Name</label>
                                         <select class="form-control" name="person" required="">
-                                            <?php echo $GLOBALS['output'];?>
+                                            <?php echo $GLOBALS['output']; ?>
 
                                         </select>
                                     </div>
@@ -132,58 +130,65 @@ else
                             </div>
                         </div>
                         <div class="row">
-                        <div class="col-lg-12">
-                            <div class="col-lg-8"></div>
-                            <div class="col-lg-4">
-                                <div class="form-group pull-right ">
-                                    <button type="button" class="btn btn-success" id="btnAddRow"  onClick="addRow('billingTable')"><i class="fa fa-2x fa-plus"></i>Row</button>
-                                    <button type="button" class="btn btn-danger" id="btnDeleteRow" onClick="deleteRow('billingTable')" ><i class="fa fa-2x fa-trash"></i>Row</button>
+                            <div class="col-lg-12">
+                                <div class="col-lg-8"></div>
+                                <div class="col-lg-4">
+                                    <div class="form-group pull-right ">
+                                        <button type="button" class="btn btn-success" id="btnAddRow"
+                                            onClick="addRow('billingTable')"><i
+                                                class="fa fa-2x fa-plus"></i>Row</button>
+                                        <button type="button" class="btn btn-danger" id="btnDeleteRow"
+                                            onClick="deleteRow('billingTable')"><i
+                                                class="fa fa-2x fa-trash"></i>Row</button>
+                                    </div>
+
                                 </div>
 
                             </div>
-
                         </div>
-                </div>
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="table-responsive">
                                     <table id="billingTable" class="table table-striped table-bordered table-hover">
                                         <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Bill Type</th>
-                                            <th>Amount</th>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Bill Type</th>
+                                                <th>Amount</th>
 
-                                        </tr>
+                                            </tr>
                                         </thead>
                                         <tbody>
 
-                                    <tr>
-                                        <td><input type="checkbox" name="chk"/></td>
-                                        <td> <input type="text" name="type[]" class="form-control" placeholder="Bill Type I.E. establish,paper,meal"/> </td>
-                                        <td> <input type="text" name="amount[]" class="form-control" placeholder="Amount"/> </td>
-                                    </tr>
+                                            <tr>
+                                                <td><input type="checkbox" name="chk" /></td>
+                                                <td> <input type="text" name="type[]" class="form-control"
+                                                        placeholder="Bill Type I.E. establish,paper,meal" /> </td>
+                                                <td> <input type="text" name="amount[]" class="form-control"
+                                                        placeholder="Amount" /> </td>
+                                            </tr>
                                         <tbody>
-                                </table>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
 
 
 
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="col-lg-5"></div>
-                                <div class="col-lg-2">
-                                    <div class="form-group ">
-                                        <button type="submit" class="btn btn-success" name="btnSave" ><i class="fa fa-2x fa-check"></i>Save</button>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="col-lg-5"></div>
+                                    <div class="col-lg-2">
+                                        <div class="form-group ">
+                                            <button type="submit" class="btn btn-success" name="btnSave"><i
+                                                    class="fa fa-2x fa-check"></i>Save</button>
+                                        </div>
+
                                     </div>
+                                    <div class="col-lg-5">
 
-                                </div>
-                                <div class="col-lg-5">
-
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                     </form>
                 </div>
                 <!-- /.panel-body -->
@@ -212,7 +217,7 @@ else
         var cell1 = row.insertCell(0);
         var element1 = document.createElement("input");
         element1.type = "checkbox";
-        element1.name="chkbox[]";
+        element1.name = "chkbox[]";
         cell1.appendChild(element1);
 
 
@@ -221,14 +226,14 @@ else
         var element2 = document.createElement("input");
         element2.type = "text";
         element2.name = "type[]";
-        element2.className ="form-control";
+        element2.className = "form-control";
         cell2.appendChild(element2);
 
         var cell3 = row.insertCell(2);
         var element3 = document.createElement("input");
         element3.type = "text";
         element3.name = "amount[]";
-        element3.className ="form-control";
+        element3.className = "form-control";
         cell3.appendChild(element3);
 
 
@@ -239,10 +244,10 @@ else
             var table = document.getElementById(tableID);
             var rowCount = table.rows.length;
 
-            for(var i=0; i<rowCount; i++) {
+            for (var i = 0; i < rowCount; i++) {
                 var row = table.rows[i];
                 var chkbox = row.cells[0].childNodes[0];
-                if(null != chkbox && true == chkbox.checked) {
+                if (null != chkbox && true == chkbox.checked) {
                     table.deleteRow(i);
                     rowCount--;
                     i--;
@@ -251,10 +256,9 @@ else
 
 
             }
-        }catch(e) {
+        } catch (e) {
             alert(e);
         }
     }
 
 </SCRIPT>
-

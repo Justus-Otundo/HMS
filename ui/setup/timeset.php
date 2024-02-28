@@ -36,7 +36,7 @@ else {
             $msg = $db->open();
             if ($msg = "true") {
                 $result = $db->getData("SELECT * FROM timeset");
-                if(mysql_num_rows($result)>0) {
+                if(mysqli_num_rows($result)>0) {
                     $query = "update timeset set inTime='" . $_POST['start_time'] . "',outTime='" . $_POST['end_time'] . "'";
                     $result = $db->update($query);
                     if ($result === "true") {
@@ -79,10 +79,10 @@ else {
 
             $data = array();
             $result = $db->getData("SELECT * FROM timeset");
-            if(mysql_num_rows($result)>0) {
+            if(mysqli_num_rows($result)>0) {
                 if (false === strpos((string)$result, "Can't")) {
                     $data = array();
-                    while ($row = mysql_fetch_array($result)) {
+                    while ($row = mysqli_fetch_array($result)) {
                         array_push($data, $row['inTime']);
                         array_push($data, $row['outTime']);
 

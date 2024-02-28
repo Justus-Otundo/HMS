@@ -29,7 +29,7 @@ else
     $GLOBALS['output']='';
     if(false===strpos((string)$result,"Can't"))
     {
-        while ($row = mysql_fetch_array($result)) {
+        while ($row = mysqli_fetch_array($result)) {
             $GLOBALS['isData']="1";
             $GLOBALS['output'] .= '<option value="'.$row['userId'].'">'.$row['name'].'</option>';
 
@@ -124,7 +124,7 @@ function getData()
                                         </tr>
                                     </thead>
                                     <tbody>';
-            while ($row = mysql_fetch_array($result)) {
+            while ($row = mysqli_fetch_array($result)) {
                 $GLOBALS['isData1']="1";
                 $GLOBALS['output1'] .= "<tr>";
 
@@ -260,7 +260,7 @@ function LoadData($db,$userId)
     $result = $db->execDataTable($query);
     $paydata = array();
 
-    while ($row = mysql_fetch_array($result)) {
+    while ($row = mysqli_fetch_array($result)) {
 
         $rowd=array();
 

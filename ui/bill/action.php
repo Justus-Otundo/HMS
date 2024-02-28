@@ -97,7 +97,7 @@ if (isset($_GET['id']) && $_GET['wtd']) {
 }
 else
     {
-        eader("location: view.php");
+        header("location: view.php");
     }
 
 
@@ -153,7 +153,7 @@ else
                                     <?php $ses = new \sessionManager\sessionManager();
                                          //$ses->start();
                                     ?>
-                                   <?php while ($row = mysql_fetch_array($data)) {
+                                   <?php while ($row = mysqli_fetch_array($data)) {
                                       // $ses->Set("userId",$row[userId]);
                                       echo '<tr> <td><input type="checkbox" name="chk"/></td><td> <input type="text" name="type[]" class="form-control" placeholder="Bill Type I.E. establish,paper,meal" value="'.$row['type'].'"/> </td>';
                                        echo  '<td> <input type="text" name="amount[]" class="form-control" placeholder="Amount" value="'.$row['amount'].'"/> </td></tr>';

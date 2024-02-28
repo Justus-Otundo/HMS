@@ -139,7 +139,7 @@ else
     $GLOBALS['output1']='';
     if(false===strpos((string)$result,"Can't"))
     {
-        while ($row = mysql_fetch_array($result)) {
+        while ($row = mysqli_fetch_array($result)) {
             $GLOBALS['isData1']="1";
             $GLOBALS['output1'] .= '<option value="'.$row['userId'].'">'.$row['name'].'</option>';
 
@@ -197,7 +197,7 @@ function getTableData($logGRP,$userId,$db)
         $GLOBALS['output'].=              ' </tr>
                                     </thead>
                                     <tbody>';
-            while ($row = mysql_fetch_array($result)) {
+            while ($row = mysqli_fetch_array($result)) {
                 $GLOBALS['isData']="1";
                 $GLOBALS['output'] .= "<tr>";
 
@@ -350,7 +350,7 @@ function LoadData($db,$userId)
     $result = $db->execDataTable($query);
     $paydata = array();
     $handyCam = new \handyCam\handyCam();
-    while ($row = mysql_fetch_array($result)) {
+    while ($row = mysqli_fetch_array($result)) {
 
         $GLOBALS['Name']=$row["name"];
         $rowd=array();

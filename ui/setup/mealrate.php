@@ -38,7 +38,7 @@ else {
 
                 $rate = (float)$_POST['rate'];
                 $result = $db->getData("SELECT * FROM mealrate");
-                if(mysql_num_rows($result)>0) {
+                if(mysqli_num_rows($result)>0) {
                     $query = "update mealrate set rate=" . $rate . ",note='" . $_POST['note'] . "'";
                     $result = $db->update($query);
                     if ($result === "true") {
@@ -85,14 +85,14 @@ else {
 
             if (false === strpos((string)$result, "Can't")) {
                 $data = array();
-                while ($row = mysql_fetch_array($result)) {
+                while ($row = mysqli_fetch_array($result)) {
                     array_push($data, $row['rate']);
                     array_push($data, $row['note']);
 
 
                 }
 
-                if(mysql_num_rows($result)>0) {
+                if(mysqli_num_rows($result)>0) {
                     $GLOBALS['note'] = $data[1];
                     $GLOBALS['rate'] = $data[0];
                 }

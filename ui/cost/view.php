@@ -67,7 +67,7 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         </tr>
                                     </thead>
                                     <tbody>';
-            while ($row = mysql_fetch_array($result)) {
+            while ($row = mysqli_fetch_array($result)) {
                 $GLOBALS['isData']="1";
                 $GLOBALS['output'] .= "<tr>";
 
@@ -210,7 +210,7 @@ function LoadData($db)
     $result = $db->execDataTable($query);
     $paydata = array();
     $handyCam = new \handyCam\handyCam();
-    while ($row = mysql_fetch_array($result)) {
+    while ($row = mysqli_fetch_array($result)) {
 
         $rowd=array();
 
